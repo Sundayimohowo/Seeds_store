@@ -20,6 +20,12 @@ export const productsDetailsFetchCleanup = () => ({
   type: "PRODUCT_DETAILS_FETCH_CLEANUP",
 });
 
+/**
+ * @function productsDetailsFetch
+ * @params {id: number} payload
+ * @description This fetches all the product's details.
+ * @returns All the products details
+ */
 export const productsDetailsFetch = payload => async dispatch => {
   try {
     dispatch(productsDetailsFetchStart());
