@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, TextInput, ScrollView } from "react-native";
+import { StyleSheet, SafeAreaView, TextInput, ScrollView, Dimensions } from "react-native";
 import { Text, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -78,7 +78,7 @@ const ProductDetails = ({ route }) => {
               />
               <View style={{ width: "100%", flex: 1, }}>
                 <Text style={{ marginTop: 5,color:data.textColor, marginBottom: 3, marginLeft: 5,}}>
-                  <Text style={{ fontWeight: "bold" }}>Name: {data.title}</Text> 
+                  <Text style={{ fontWeight: "bold" }}>Name: {data.title + "  "}</Text> 
                   {data.ukOnly && (
                     <Image
                       source={require("../../../assets/images/ukFlag.png")}
@@ -97,7 +97,7 @@ const ProductDetails = ({ route }) => {
                   <Text style={{ fontWeight: "bold", }}>Price:</Text>{" "}
                   {data.price}
                 </Text>
-                <Text style={{ marginTop: 5,color:data.textColor, marginBottom: 3, marginLeft: 5 }}>
+                <Text style={{ marginTop: 5,color:data.textColor, lineHeight: 25, marginBottom: 3, marginLeft: 5 }}>
                   <Text style={{ fontWeight: "bold",}}>Description:</Text>{" "}
                   {data.description}
                 </Text>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   product: {
     width: "95%",
     marginLeft: "2.5%",
-    //   height:550,
+    minHeight: Dimensions.get('window').height,
     paddingBottom: 15,
     shadowColor: "rgba(0,0,0,0.3)",
     shadowOffset: { width: 2, height: 2 },
