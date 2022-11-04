@@ -1,10 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Provider } from "react-redux";
+import { store } from "./src/app/store";
 import ProductsPage from "./src/components/productsPage";
 import ProductsDetails from "./src/components/productsPage/productDetails";
-import store from "./src/store";
 
 export default function App() {
   const Stack = createNativeStackNavigator();

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -9,8 +9,8 @@ import {
   Text,
   Pressable,
   View,
-  TouchableOpacity,
 } from "react-native";
+import { ImageCarouselProps, Product } from "../../app/types";
 
 const { width } = Dimensions.get("window");
 
@@ -22,27 +22,28 @@ const CURRENT_ITEM_TRANSLATE_Y = 48;
 
 /**
  * @function carousel
- * @param {data} the product data to display in the carousel
+ * @param data product data to display in the carousel
  * @returns the carousel component
  */
-const ImageCarousel = ({ data }) => {
+const ImageCarousel: React.FC<ImageCarouselProps> = ({ data }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
-  const [dataWithPlaceholders, setDataWithPlaceholders] = useState([]);
-  const [isNextDisabled, setIsNextDisabled] = useState(false);
-  const [isPrevDisabled, setIsPrevDisabled] = useState(false);
-  const currentIndex = useRef(0);
-  const navigation = useNavigation();
+  const [dataWithPlaceholders, setDataWithPlaceholders] = useState<Product[] | any>([]);
+  const [isNextDisabled, setIsNextDisabled] = useState<boolean>(false);
+  const [isPrevDisabled, setIsPrevDisabled] = useState<boolean>(false);
+  const currentIndex = useRef<React.MutableRefObject<number> | any>(0);
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+  const navigation: any = useNavigation();
   useEffect(() => {
     setDataWithPlaceholders([{ id: -1 }, ...data, { id: data.length }]);
   }, [data]);
-  const flatListRef = useRef(null); // this references the flatlist tag.
+  const flatListRef = useRef<FlatList>(null); // this references the flatlist tag.
 
   const handleOnViewableItemsChanged = useCallback(
-    ({ viewableItems }) => {
+    ({ viewableItems }: any) => {
       const itemsInView = viewableItems.filter(
-        ({ item }) => item.image1 && item.title
+        ({ item }: any) => item.image1 && item.title
       );
-
       if (itemsInView.length === 0) {
         return;
       }
@@ -83,11 +84,11 @@ const ImageCarousel = ({ data }) => {
       });
     }
   };
-  const getItemLayout = () => ({
-    length: ITEM_LENGTH,
-    offset: ITEM_LENGTH * (index - 1),
-    index,
-  });
+  // const getItemLayout = () => ({
+  //   length: ITEM_LENGTH,
+  //   offset: ITEM_LENGTH * (index - 1),
+  //   index,
+  // });
   return (
     <View style={styles.container}>
       <FlatList
@@ -96,9 +97,10 @@ const ImageCarousel = ({ data }) => {
         onViewableItemsChanged={handleOnViewableItemsChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 100 }}
         data={dataWithPlaceholders}
+        keyExtractor={item => item.id}
         renderItem={({ item, index }) => {
           if (!item.image1 || !item.title) {
-            return <View style={{ width: EMPTY_ITEM_LENGTH }} />;
+            return <View key={index} style={{ width: EMPTY_ITEM_LENGTH }} />;
           }
 
           const inputRange = [
@@ -118,14 +120,21 @@ const ImageCarousel = ({ data }) => {
           });
 
           return (
-            <View testID="product-id" style={{ width: ITEM_LENGTH }}>
-              <Animated.View
+            <View key={item.id} testID="product-id" style={{ width: ITEM_LENGTH }}>
+              <AnimatedPressable
+                key={item.id}
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    paramKey: item.id,
+                  })
+                }
                 style={[
                   {
                     transform: [{ translateY }],
                   },
                   styles.itemContent,
                 ]}
+
               >
                 <Image source={{ uri: item.image1 }} style={styles.itemImage} />
                 <View
@@ -138,7 +147,7 @@ const ImageCarousel = ({ data }) => {
                   ]}
                 >
                   <Text
-                    style={[{ color: item.textColor }, styles.itemTexOfLines]}
+                    style={{ color: item.textColor }}
                   >
                     {item.title}
                   </Text>
@@ -149,42 +158,42 @@ const ImageCarousel = ({ data }) => {
                     />
                   )}
                 </View>
-              </Animated.View>
+              </AnimatedPressable>
               <Text
-                
+
                 style={{
                   backgroundColor: item.accentColor,
                   paddingTop: 5,
                   color: item.textColor,
-                  width: "80%",
+                  width: 70,
                   textAlign: "center",
                   position: "absolute",
                   top: 70,
                   right: 20,
                   borderRadius: 10,
-                  width: 70,
                   height: 35,
                 }}
               >
                 $ {item.price}
               </Text>
-            </View>
+            </View >
           );
         }}
         // getItemLayout={()=>getItemLayout(index)}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
         bounces={false}
         decelerationRate={0}
         renderToHardwareTextureAndroid
         contentContainerStyle={styles.flatListContent}
         snapToInterval={ITEM_LENGTH}
         snapToAlignment="start"
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
-        )}
+        onScroll={
+          Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false }
+          )
+        }
         scrollEventThrottle={16}
       />
       <View style={styles.footer}>
@@ -224,7 +233,7 @@ const ImageCarousel = ({ data }) => {
           </Text>
         </Pressable>
       </View>
-    </View>
+    </View >
   );
 };
 
