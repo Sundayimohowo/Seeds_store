@@ -174,7 +174,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ data }) => {
                   height: 35,
                 }}
               >
-                $ {item.price}
+               {item.price ?  "$"+item.price : "free"}
               </Text>
             </View >
           );

@@ -20,6 +20,7 @@ const SwitchToggle: React.FC<SwitchToggleProps> = ({show,toggleSwitch}) => {
             <Text style={{ fontWeight: "bold" }}>Toggle view: </Text>
             <View>
                 <Switch
+                    testID="switch"
                     tintColor="transparent"
                     thumbTintColor={show ? "#51c39d" : "#cccccc"}
                     onTintColor="transparent"
